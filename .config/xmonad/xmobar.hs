@@ -7,7 +7,7 @@ Config {
     -- right_padding = 12 * 23 = 276
     -- Example: position = TopP 0 276
     position = TopP 0 0,
-    font = "firacode-retina",
+    font = "xft:FiraCode:Style=Retina:size=10",
     bgColor = "#000000",
     fgColor = "#FFFFFF",
     lowerOnStart = False,
