@@ -24,8 +24,6 @@
 
 Development/
 Downloads/
-Pictures/*
-!Pictures/Wallpapers/*
 Scripts/
 
 .emacs.d/*
