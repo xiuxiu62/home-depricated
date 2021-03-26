@@ -1,0 +1,71 @@
+*.loginshell: true
+*.savelines: 5000
+
+*.rightScrollBar: true
+*.scrollBar: false 
+*.scrollTtyOutput: false
+*.selectToClipboard: true
+ 
+*.background: #111111
+*.foreground: #dddddd
+
+! black
+*.color0: #263640
+*.color8: #4a697d
+
+! red
+*.color1: #d12f2c
+*.color9: #fa3935
+
+! green
+*.color2: #819400
+*.color10: #a4bd00
+
+! yellow
+*.color3: #b08500
+*.color11: #d9a400
+
+! blue
+*.color4: #2587cc
+*.color12: #2ca2f5
+
+! magenta
+*.color5: #696ebf
+*.color13: #8086e8
+
+! cyan
+*.color6: #289c93
+*.color14: #33c5ba
+
+! white
+*.color7: #bfbaac
+*.color15: #fdf6e3
+
+*.cursorColor: magenta
+
+xterm*faceName: Fira Code Retina
+xterm*faceSize: 10
+
+URxvt.font: xft:FiraCode:Style=Retina:size=11
+URxvt.intensityStyles: false
+
+URxvt.perl-ext-common: default,matcher,clipboard,resize-font,url-select,keyboard-select
+URxvt.colorUL: #4682B4
+
+URxvt.copyCommand: xclip -i -selection clipboard
+URxvt.pasteCommand: xclip -o -selection clipboard
+URxvt.keysym.M-c: perl:clipboard:copy
+URxvt.keysym.M-v: perl:clipboard:paste
+URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
+URxvt.keysym.M-Escape: perl:keyboard-select:activate
+URxvt.keysym.M-s: perl:keyboard-select:search
+URxvt.keysym.M-u: perl:url-select:select_next
+
+URxvt.resize-font.smaller: M-j
+URxvt.resize-font.bigger: M-k
+
+URxvt.matcher.button: 1
+URxvt.urlLauncher: brave
+URxvt.underlineURLs: true
+URxvt.urlButton: 1
+
