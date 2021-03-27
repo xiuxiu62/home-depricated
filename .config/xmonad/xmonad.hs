@@ -24,6 +24,7 @@ import Graphics.X11.ExtraTypes.XF86
 
 import XMonad.Util.Run (spawnPipe)
 import XMonad.Util.SpawnOnce
+import XMonad.Util.Themes
 
 
 -- Constants --------------------------------------
@@ -141,6 +142,7 @@ _layout = avoidStruts (
       nmaster = 1
       ratio   = 1/2
       delta   = 3/100
+      theme   = darkTheme 
 
 _borderWidth = 2
 

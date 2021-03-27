@@ -39,6 +39,7 @@ Scripts/
 .config/discord
 .config/galculator
 .config/gh
+.config/GIMP
 .config/gtk*
 .config/htop
 .config/libvirt

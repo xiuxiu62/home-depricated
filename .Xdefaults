@@ -3,7 +3,6 @@
 
 *.rightScrollBar: true
 *.scrollBar: false 
-*.scrollTtyOutput: false
 *.selectToClipboard: true
  
 *.background: #111111
@@ -69,3 +68,5 @@ URxvt.urlLauncher: brave
 URxvt.underlineURLs: true
 URxvt.urlButton: 1
 
+Xcursor.theme: cursor-theme
+Xcursor.size: 12
