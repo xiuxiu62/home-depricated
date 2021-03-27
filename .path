@@ -1,3 +1,4 @@
 [[ -f ~/.bin ]] && PATH=~/.bin:$PATH
 [[ -f ~/.local/bin ]] && PATH=~/.local/bin:$PATH
 [[ -f ~/.yarn/bin ]] && PATH=~/.yarn/bin:$PATH
+

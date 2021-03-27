@@ -132,11 +132,10 @@ _mouse (XConfig {XMonad.modMask = modm}) = M.fromList $
 
 defaultGaps = [(U,15),(D,15),(R,15),(L,15)]
 
-_layout = avoidStruts (
-  gaps defaultGaps $ tiled ||| 
-  Mirror tiled |||
-  Full |||
-  noBorders (fullscreenFull Full)) 
+_layout = avoidStruts $
+  gaps defaultGaps ( tiled ||| 
+  Mirror tiled) |||
+  noBorders Full
     where
       tiled   = Tall nmaster delta ratio
       nmaster = 1
