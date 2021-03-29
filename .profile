@@ -4,3 +4,5 @@
 [[ -f ~/.config/bashrc ]] && . ~/.bashrc
 [[ -f ~/.cargo/env ]] && . ~/.cargo/env
 
+export LANG=en_US.utf8
+export EDITOR=nvim

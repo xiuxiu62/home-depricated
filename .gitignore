@@ -8,6 +8,7 @@
 .git
 .gitconfig
 .gnupg
+.icons
 .keychain
 .kite
 .local
@@ -27,6 +28,7 @@
 
 Development/
 Downloads/
+Documents/
 Scripts/
 
 .emacs.d/*
