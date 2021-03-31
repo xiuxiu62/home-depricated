@@ -49,7 +49,7 @@ URxvt.colorDB : #ffffff
 URxvt.colorUL : #4682b4
 
 URxvt.perl-ext-common : default,matcher,clipboard,resize-font,url-select,keyboard-select
-URxvt.font            : xft:FiraCode:Style=Retina:size=11
+URxvt.font            : xft:FiraCode:Style=Retina:size=10
 URxvt.internalBorder  : 5
 URxvt.iso14755        : true
 URxvt*depth           : 32

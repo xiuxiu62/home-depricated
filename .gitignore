@@ -29,6 +29,7 @@
 Development/
 Downloads/
 Documents/
+go/
 Scripts/
 
 .emacs.d/*
@@ -45,6 +46,7 @@ Scripts/
 .config/discord
 .config/galculator
 .config/gh
+.config/go/
 .config/GIMP
 .config/gtk*
 .config/htop
@@ -53,6 +55,7 @@ Scripts/
 .config/nitrogen
 .config/nvim.bak
 .config/pavucontrol.ini
+.config/Postman/
 .config/procps
 .config/pulse
 .config/spotify
