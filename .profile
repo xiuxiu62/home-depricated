@@ -7,5 +7,4 @@
 
 [[ -f ~/.config/bashrc ]] && . ~/.bashrc
 
-export LANG=en_US.utf8
 export EDITOR=nvim
