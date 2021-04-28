@@ -3,7 +3,6 @@ alias ...='cd ../..'
 alias ..3='cd ../../..'
 alias ..4='cd ../../../..'
 alias ..5='cd ../../../../..'
-alias dev='cd ~/Development'
 
 alias l='ls --color=auto'
 alias ls='ls --color=auto'
@@ -119,4 +118,3 @@ alias gpg-check="gpg2 --keyserver-options auto-key-retrieve --verify"
 alias gpg-retrieve="gpg2 --keyserver-options auto-key-retrieve --receive-keys"
 
 alias nf="neofetch"
-alias take-out-the-trash="rm -rf ~/.local/share/Trash/files/* && rm -rf ~/.local/share/Trash/info/*"

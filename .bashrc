@@ -1,8 +1,8 @@
 [[ $- != *i* ]] && return
 
 export HISTCONTROL=ignoreboth:erasedups
-
-PS1="\[$(tput bold)\]\[\033[38;5;9m\][\[$(tput sgr0)\]\[\033[38;5;220m\]\u\[$(tput sgr0)\]\[\033[38;5;76m\]@\[$(tput sgr0)\]\[\033[38;5;81m\]\h\[$(tput sgr0)\] \[$(tput sgr0)\]\[$(tput bold)\]\[\033[38;5;205m\]\W\[$(tput sgr0)\]\[\033[38;5;9m\]]\[$(tput sgr0)\]\\$\[$(tput sgr0)\] \[$(tput sgr0)\]"
+export EDITOR=nvim
+export PS1="\[$(tput bold)\]\[\033[38;5;9m\][\[$(tput sgr0)\]\[\033[38;5;220m\]\u\[$(tput sgr0)\]\[\033[38;5;76m\]@\[$(tput sgr0)\]\[\033[38;5;81m\]\h\[$(tput sgr0)\] \[$(tput sgr0)\]\[$(tput bold)\]\[\033[38;5;205m\]\W\[$(tput sgr0)\]\[\033[38;5;9m\]]\[$(tput sgr0)\]\\$\[$(tput sgr0)\] \[$(tput sgr0)\]"
 
 # Bad hack to set default cursor
 xsetroot -cursor_name left_ptr
@@ -41,5 +41,11 @@ ex ()
     echo "'$1' is not a valid file"
   fi
 }
+
+# Includes
+[[ -d ~/.bin ]] && PATH=~/.bin:$PATH
+[[ -d ~/.local/bin ]] && PATH=~/.local/bin:$PATH
+[[ -d ~/.yarn/bin ]] && PATH=~/.yarn/bin:$PATH
+[[ -f ~/.cargo/env ]] && . ~/.cargo/env
 
 [ -f ~/.aliases ] && . ~/.aliases

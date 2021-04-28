@@ -4,6 +4,8 @@
 .bin
 .cache
 .cargo
+.dmrc
+.expo
 .ghc
 .git
 .gitconfig
@@ -11,11 +13,13 @@
 .icons
 .keychain
 .kite
+.lesshst
 .local
 .mozilla
 .npm
 .pki
 .rustup
+.slime
 .ssh
 .viminfo
 .vscode
@@ -30,6 +34,8 @@ Development/
 Downloads/
 Documents/
 go/
+ISOs/
+quicklisp/
 Scripts/
 
 .emacs.d/*
@@ -52,12 +58,15 @@ Scripts/
 .config/htop
 .config/libvirt
 .config/mimeapps.list
+.config/nextjs-nodejs/
 .config/nitrogen
 .config/nvim.bak
+.config/ObinsKit/
 .config/pavucontrol.ini
 .config/Postman/
 .config/procps
 .config/pulse
+.config/Raspberry*
 .config/spotify
 .config/xmonad/*.hi
 .config/xmonad/*.o
