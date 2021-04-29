@@ -2,7 +2,7 @@
 ;; ---------------------- XIU-MACS -- by: Justin cremer ------------------------
 ;; -----------------------------------------------------------------------------
 
-;; Startup performance ---------------------------------------------------------
+;; Startup ---------------------------------------------------------------------
 
 (setq gc-cons-threshold (* 50 1000 1000))
 
@@ -11,10 +11,10 @@
             (message "*** Emacs loaded in %s with %d garbage collections."
                      (format "%.2f seconds"
                              (float-time
-                              (time-subtract after-init-time before-init-time)))
+							  (time-subtract after-init-time before-init-time)))
                      gcs-done)))
 
-;; Set char standard on Windows (thanks Bill)
+;; Make sure correct char standard is used on Windows (thanks Bill)
 (set-default-coding-systems 'utf-8)
 
 ;; Package Management ----------------------------------------------------------
@@ -35,18 +35,16 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;; Straight Package Manager ----------------------------------------------------
-
 ;; Bootstrap straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
-      (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
       (bootstrap-version 5))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
         (url-retrieve-synchronously
-        "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-        'silent 'inhibit-cookies)
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
@@ -111,8 +109,8 @@
 
 (defun replace-unicode-font-mapping (block-name old-font new-font)
   (let* ((block-idx (cl-position-if
-                         (lambda (i) (string-equal (car i) block-name))
-                         unicode-fonts-block-font-mapping))
+                     (lambda (i) (string-equal (car i) block-name))
+                     unicode-fonts-block-font-mapping))
          (block-fonts (cadr (nth block-idx unicode-fonts-block-font-mapping)))
          (updated-block (cl-substitute new-font old-font block-fonts :test 'string-equal)))
     (setf (cdr (nth block-idx unicode-fonts-block-font-mapping))
@@ -124,21 +122,24 @@
 
 ;; Style -----------------------------------------------------------------------
 
-(setq initial-frame-alist (quote ((fullscreen . maximized))))
+(setq initial-frame-alist '((fullscreen . maximized)))
 
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(tooltip-mode -1)
-(set-fringe-mode 5)
-(electric-pair-mode 1)
-
-(setq visible-bell t)
-(setq inhibit-startup-message t
-      initial-scratch-message nil)
-
-(column-number-mode)
-(global-display-line-numbers-mode t)
+(unless nil
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (tooltip-mode -1)
+  (set-fringe-mode 5)
+  (electric-pair-mode 1)
+  (column-number-mode)
+  (global-display-line-numbers-mode t)
+  (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
+  (setq mouse-wheel-progressive-speed nil)
+  (setq mouse-wheel-follow-mouse 't)
+  (setq scroll-step 1)
+  (setq use-dialog-box nil)
+  (setq visible-bell t)
+  (setq inhibit-startup-message t))
 
 (dolist (mode '(org-mode-hook
 				shell-mode-hook
@@ -163,12 +164,38 @@
 
 (use-package diminish)
 
+;; Which Key  ------------------------------------------------------------------
+
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config (setq which-key-idle-delay 0.3))
+
+;; General ---------------------------------------------------------------------
+
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+(global-set-key (kbd "C-M-j") 'counsel-switch-buffer)
+
+(use-package general
+  :config
+  (general-evil-setup t)
+  (general-create-definer leader-key-def
+	:keymaps '(normal insert visual)
+	:prefix "SPC"
+	:global-prefix "C-SPC")
+  (general-create-definer ctrl-c-keys
+	:prefix "C-c"))
+
+(leader-key-def
+  "t" '(:ignore t :which-key "toggles")
+  "tt" '(counsel-load-theme :which-key "choose theme"))
+
 ;; Ivy -------------------------------------------------------------------------
 
-(use-package swiper)
 (use-package ivy
   :diminish
   :bind (("C-s" . swiper)
+		 ("C-;" . comment-line)
 		 :map ivy-minibuffer-map
 		 ("TAB" . ivy-alt-done)
 		 ("C-l" . ivy-alt-done)
@@ -181,54 +208,133 @@
          :map ivy-reverse-i-search-map
          ("C-k" . ivy-previous-line)
          ("C-d" . ivy-reverse-i-search-kill))
-  :config (ivy-mode 1))
+  :init (ivy-mode 1)
+  :config
+  (setq ivy-use-virtual-buffers t) (setq ivy-wrap t)
+  (setq ivy-count-format "(%d/%d) ")
+  (setq enable-recursive-minibuffers t)
+
+  ;; Use different regex strategies per completion command
+  (push '(completion-at-point . ivy--regex-fuzzy) ivy-re-builders-alist) ;; This doesn't seem to work...
+  (push '(swiper . ivy--regex-ignore-order) ivy-re-builders-alist)
+  (push '(counsel-M-x . ivy--regex-ignore-order) ivy-re-builders-alist)
+
+  ;; Set minibuffer height for different commands
+  (setf (alist-get 'counsel-projectile-ag ivy-height-alist) 15)
+  (setf (alist-get 'counsel-projectile-rg ivy-height-alist) 15)
+  (setf (alist-get 'swiper ivy-height-alist) 15)
+  (setf (alist-get 'counsel-switch-buffer ivy-height-alist) 7))
+
+(use-package ivy-hydra
+  :defer t
+  :after hydra)
 
 (use-package ivy-rich
-  :init (ivy-rich-mode 1))
+  :init (ivy-rich-mode 1)
+  :after counsel
+  :config
+  (setq ivy-format-function #'ivy-format-function-line)
+  (setq ivy-rich-display-transformers-list
+        (plist-put ivy-rich-display-transformers-list
+                   'ivy-switch-buffer
+                   '(:columns
+                     ((ivy-rich-candidate (:width 40))
+                      (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right)); return the buffer indicators
+                      (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))          ; return the major mode info
+                      (ivy-rich-switch-buffer-project (:width 15 :face success))             ; return project name using `projectile'
+                      (ivy-rich-switch-buffer-path ; return file path relative to project root or `default-directory' if project is nil
+					   (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))
+                     :predicate
+                     (lambda (cand)
+                       (if-let ((buffer (get-buffer cand)))
+                           ;; Don't mess with EXWM buffers
+                           (with-current-buffer buffer
+                             (not (derived-mode-p 'exwm-mode)))))))))
 
 (use-package counsel
   :bind (("M-x" . counsel-M-x)
          ("C-x b" . counsel-ibuffer)
          ("C-x C-f" . counsel-find-file)
+		 ("C-M-l" . counsel-imenu)
          :map minibuffer-local-map
          ("C-r" . 'counsel-minibuffer-history))
+  :custom
+  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)
   :config (setq ivy-initial-inputs-alist nil))
+
+(use-package flx ;; Imroves sorting for fuzzy-matched results
+  :defer t
+  :after ivy
+  :init (setq ivy-flx-limit 10000))
+
+(use-package wgrep)
+(use-package ripgrep)
+
+(use-package ivy-posframe
+  :custom
+  (ivy-posframe-width      115)
+  (ivy-posframe-min-width  115)
+  (ivy-posframe-height     10)
+  (ivy-posframe-min-height 10)
+  :config
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+  (setq ivy-posframe-parameters '((parent-frame . nil)
+                                  (left-fringe . 8)
+                                  (right-fringe . 8)))
+  (ivy-posframe-mode 1))
+
+(use-package prescient
+  :after counsel
+  :config
+  (prescient-persist-mode 1))
+
+(use-package ivy-prescient
+  :after prescient
+  :config
+  (ivy-prescient-mode 1))
+
+(leader-key-def
+  "r"   '(ivy-resume :which-key "ivy resume")
+  "f"   '(:ignore t :which-key "files")
+  "ff"  '(counsel-find-file :which-key "open file")
+  "C-f" 'counsel-find-file
+  "fr"  '(counsel-recentf :which-key "recent files")
+  "fR"  '(revert-buffer :which-key "revert file")
+  "fj"  '(counsel-file-jump :which-key "jump to file"))
+
+;; Avy -------------------------------------------------------------------------
+
+(use-package avy
+  :commands (avy-goto-char avy-goto-word-0 avy-goto-line))
+
+(leader-key-def
+  "j"   '(:ignore t :which-key "jump")
+  "jj"  '(avy-goto-char :which-key "jump to char")
+  "jw"  '(avy-goto-word-0 :which-key "jump to word")
+  "jl"  '(avy-goto-line :which-key "jump to line"))
 
 ;; Helpful ---------------------------------------------------------------------
 
-(use-package which-key
-  :init (which-key-mode)
-  :diminish which-key-mode
-  :config (setq which-key-idle-delay 0.3))
-
 (use-package helpful
-  :ensure t
   :custom
   (counsel-describe-function-function #'helpful-callable)
   (counsel-describe-variable-function #'helpful-variable)
   :bind
-  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-function] . helpful-function)
+  ([remap describe-symbol] . helpful-symbol)
+  ([remap describe-variable] . helpful-variable)
   ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
 
-;; General ---------------------------------------------------------------------
+(leader-key-def
+  "e"  '(:ignore t :which-key "eval")
+  "eb" '(eval-buffer :which-key "eval buffer"))
 
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-(global-set-key (kbd "C-M-j") 'counsel-switch-buffer)
+(leader-key-def
+  :keymaps '(visual)
+  "er" '(eval-region :which-key "eval region"))
 
-(use-package general
-  :config
-  (general-create-definer leader-keys
-	:keymaps '(normal insert visual)
-	:prefix "SPC"
-	:global-prefix "C-SPC")
-
-  (leader-keys
-	"t" '(:ignore t :which-key "toggles")
-	"tt" '(counsel-load-theme :which-key "choose theme")))
-
-;; Evil Mode
+;; Evil -------------------------------------------------------------------
 
 (defun evil-hook ()
   (dolist (mode '(custom-mode
@@ -280,6 +386,8 @@
   :config
   (evil-collection-init))
 
+;; Hydra -----------------------------------------------------------------------
+
 (use-package hydra)
 
 (defhydra hydra-text-scale (:timeout 4)
@@ -288,7 +396,7 @@
   ("k" text-scale-decrease "out")
   ("f" nil "finished" :exit t))
 
-(leader-keys
+(leader-key-def
   "ts" '(hydra-text-scale/body :which-key "scale-text"))
 
 ;; Projectile ------------------------------------------------------------------
@@ -307,18 +415,34 @@
 
 ;; Magit -----------------------------------------------------------------------
 
-;; C-c g to activate
-;; (use-package magit
-;;  :commands (magit-status magit-get-current-brach)
-;;   :custom
-;;   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+(use-package magit
+  :bind ("C-M-;" . magit-status)
+  :commands (magit-status magit-get-current-branch)
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
-;; (use-package evil-magit
-;;   :after magit)
+(leader-key-def
+  "g"   '(:ignore t :which-key "git")
+  "gs"  'magit-status
+  "gd"  'magit-diff-unstaged
+  "gc"  'magit-branch-or-checkout
+  "gl"   '(:ignore t :which-key "log")
+  "glc" 'magit-log-current
+  "glf" 'magit-log-buffer-file
+  "gb"  'magit-branch
+  "gP"  'magit-push-current
+  "gp"  'magit-pull-branch
+  "gf"  'magit-fetch
+  "gF"  'magit-fetch-all
+  "gr"  'magit-rebase)
 
-;; (use-package forge)
+(use-package forge
+  :disabled)
 
-;; Org Mode --------------------------------------------------------------------
+(use-package magit-todos
+  :defer t)
+
+;; Org -------------------------------------------------------------------------
 
 (defun org-mode-setup ()
   (org-indent-mode)
@@ -381,7 +505,7 @@
   :defer t)
 
 (use-package typescript-mode
-  :mode "\\.ts\\'"
+  :mode "\\.tsx?\\'"
   :hook (typescript-mode . lsp-deferred)
   :config (setq typescript-indent-level 2))
 
@@ -390,26 +514,28 @@
   (setq evil-shift-width js-indent-level)
   (setq-default tab-width 2))
 
-(use-package js2-mode
-  :mode "\\.jsx?\\'"
-  :config
+(defun js2-config ()
   ;; Use js2-mode for Node scripts
   (add-to-list 'magic-mode-alist '("#!/usr/bin/env node" . js2-mode))
-
   ;; Don't use built-in syntax checking
   (setq js2-mode-show-strict-warnings nil)
-
   ;; Set up proper indentation in JavaScript and JSON files
   (add-hook 'js2-mode-hook #'set-js-indentation)
   (add-hook 'json-mode-hook #'set-js-indentation))
 
-;; (use-package apheleia
-;;   :config
-;;   i(apheleia-global-mode +1))
+(use-package js2-mode
+  :mode "\\.jsx?\\'"
+  :config
+  (js2-config))
+
+(use-package apheleia
+  :straight t
+  :config
+  (apheleia-global-mode +1))
 
 (use-package prettier-js
-  ;; :hook ((js2-mode . prettier-js-mode)
-  ;;        (typescript-mode . prettier-js-mode))
+  :hook ((js2-mode . prettier-js-mode)
+         (typescript-mode . prettier-js-mode))
   :config
   (setq prettier-js-show-errors nil))
 
@@ -460,10 +586,10 @@
 (setq inferior-lisp-program "/usr/bin/sbcl")
 
 (use-package sly
-  :disabled
+  ;; :disabled
   :mode "\\.lisp\\'")
 
-(use-package slime
+(use-package slime 
   :disabled
   :mode "\\.lisp\\'")
 
@@ -483,7 +609,7 @@
 
 (use-package smartparens
   :hook (prog-mode . smartparens-mode))
-k
+
 ;; Misc  -----------------------------------------------------------------------
 ;; TODO: clean up
 ;; (use-package projectile :ensure t) ;; project management
