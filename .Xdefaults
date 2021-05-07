@@ -4,8 +4,8 @@
 *.scrollBar         : false 
 *.selectToClipboard : true
 
-*faceName : Fira Code Retina
-*faceSize : 10
+*faceName : Iosevka
+*faceSize : 12
 
 Xcursor.theme : Neutral
 Xcursor.size  : 16
@@ -49,11 +49,11 @@ URxvt.colorDB : #ffffff
 URxvt.colorUL : #4682b4
 
 URxvt.perl-ext-common : default,matcher,clipboard,resize-font,url-select,keyboard-select
-URxvt.font            : xft:FiraCode:Style=Retina:size=10
+URxvt.font : xft:Iosevka:regular:size=12:antialias=true:hinting=true
+
 URxvt.internalBorder  : 5
 URxvt.iso14755        : true
 URxvt*depth           : 32
-
 
 URxvt.keysym.M-x   : perl:keyboard-select:activate
 URxvt.keysym.M-c   : perl:clipboard:copy
@@ -70,8 +70,8 @@ URxvt.url-select.button    : 1
 URxvt.resize-font.smaller : M-j
 URxvt.resize-font.bigger  : M-k
 
-xterm*faceName : Fira Code Retina
-xterm*faceSize : 10
+xterm*faceName : Iosevka
+xterm*faceSize : 12
 
 Xft.lcdfilter : lcddefault
 Xft.hintstyle : hintslight

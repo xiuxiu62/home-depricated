@@ -1,3 +1,11 @@
-**/*
-!.gitignore
-!init.el
+/auto-save-list
+/backups
+/eln-cache
+/elpa
+/straight
+/transient
+/var
+
+custom.el
+forge-database.sqlite
+projectile-bookmarks.eld
